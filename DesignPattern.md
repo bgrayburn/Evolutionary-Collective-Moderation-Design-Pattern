@@ -9,7 +9,7 @@ A digital space that aims to maintain community agency in regards to self-defini
 - Policy enforcement must be consistent
 - Policy enforcement must be independent of who is enforcing that policy.
 
-Democratic processes (ie. voting) are known methods for achieving the first criteria and are the method adopted by this design pattern. This could be majority voting, rank choice voting, quadratic voting, or any other voting system that can be clearly understood by community members. For the purpose of this design pattern, examples will use majority voting for simplicity, but that is not meant to be a defining attribute of this pattern and should be determined outside of this pattern and serve as context under which this pattern is implemented.
+Democratic voting are known methods for achieving the first criteria and is the method adopted by this design pattern. This could be majority voting, rank choice voting, quadratic voting, or any other voting system that can be clearly understood by community members. For the purpose of this design pattern, examples will use majority voting for simplicity, but that is not meant to be a defining attribute of this pattern and should be determined outside of this pattern and serve as context under which this pattern is implemented.
 
 Achieving independent interpretation and enforcement of policies requires that the entity doing the interpretation and enforcement of policies is not a member of that community.
 
