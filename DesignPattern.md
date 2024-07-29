@@ -74,7 +74,7 @@ The following shows the sequence of events surround a proposal of a new policy, 
 ```mermaid
 sequenceDiagram
   accTitle: Using an Policy to Redact a Message and Remove a User in the Evolutionary Collective Moderation Design Pattern
-  accDescr: 
+  accDescr: This sequence diagram shows a user propose a new policy, followed by 2 votes for and 1 vote against that policy, followed by the moeration bot activating the policy because of the vote totals, followed by the moderation bot announcing in the channel that the policy is active.
   actor USER1
   actor USER2
   actor USER3
