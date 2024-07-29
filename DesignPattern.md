@@ -2,19 +2,18 @@
 Enable collective determination and evolution of natural language moderation policies with enforcement carried out by a moderation bot.
 
 ## Motivation
-Consider a digital space (channel) consisting of users, moderation policies, and messages. In many such digital spaces, channel policies are set by the Moderators, who are individuals given that status either by Administrators or other Moderators. Moderators are then responsible for interpretation and enforcement of those policies. This can lead to moderator's subjective interpretation of policies influeing the community's identity and path, decreasing agency for the community as a whole. 
+Consider a digital space (channel) consisting of users, moderation policies, and messages. In many such digital spaces, channel policies are set by the Moderators, who are individuals given that status either by Administrators or other Moderators. Moderators are then responsible for interpretation and enforcement of those policies. This can lead to moderator's subjective interpretation of policies influencing the community's identity and path, decreasing agency for the community as a whole. 
 
-A digial space that aims to maintain community agency in regards to self-definition of policies must meet the following criteria:
+A digital space that aims to maintain community agency in regards to self-definition of policies must meet the following criteria:
 - Policies are determined by the community as a whole
-- Policy's enforcement must be consistent
-- Policy's enforcement must be independent of who is enforcing that policy.
+- Policy enforcement must be consistent
+- Policy enforcement must be independent of who is enforcing that policy.
 
-
-Democractic processes (ie. voting) are know methods of achieving the first criteria and are the method adopted by this design pattern. This could be majority voting, rank choice voting, quadratic voting, or any other voting system that can be clearly understood by community members. For the purpose of this design pattern, examples will use majority voting for simplicity, but that is not meant to be a defining attribute of this pattern and should be determined outside of this pattern and serve as context under which this pattern is implemented.
+Democratic processes (ie. voting) are known methods for achieving the first criteria and are the method adopted by this design pattern. This could be majority voting, rank choice voting, quadratic voting, or any other voting system that can be clearly understood by community members. For the purpose of this design pattern, examples will use majority voting for simplicity, but that is not meant to be a defining attribute of this pattern and should be determined outside of this pattern and serve as context under which this pattern is implemented.
 
 Achieving independent interpretation and enforcement of policies requires that the entity doing the interpretation and enforcement of policies is not a member of that community.
 
-Achieving consistent interpretation and enforcement requires a lack of variable internal state of the deciding entity. This is impossible to achieve if the entity is a human. Therefor, let us consider the entity interpreting and enforcing policies to be algorithmic. At the time of this writing, a strong option for this might be an artifical intelligence bot that can receive messages, look up or otherwise utilize current policies, and return a decision about any resulting actions to be taken (ex. redact the message, kick/ban a user, etc.). 
+Achieving consistent interpretation and enforcement requires a lack of variable internal state of the deciding entity. This is impossible to achieve if the entity is a human. Therefore, let us consider the entity interpreting and enforcing policies to be algorithmic. At the time of this writing, a strong option for this might be an artificial intelligence bot that can receive messages, look up or otherwise utilize current policies, and return a decision about any resulting actions to be taken (ex. redact the message, kick/ban a user, etc.). 
 
 From here on let the moderating entity be called the Moderation Bot (`ModBot`).
 
@@ -26,8 +25,8 @@ In order to adapt to community learnings about the gap between current policies 
 
 ## Applicability
 Use the Evolution Collective Moderation pattern when:
-- a digital space with clear membership because of the need for a clear notion of who is a member
-- a durable community where members have "skin in the game" (*more technical description here*)
+- a digital space has clear membership. `Users` must be know to be real to avoid voter fraud and manipulation.
+- a digital space is small to medium sized (< 50 active users). Due to the coordination cost of discussing policies in a way leading to inclusion of all voices, this pattern should not be applied to large groups, where subgroups can dominate the conversation and thus the eventual decision surrounding a policy. 
 
 ## Structure
 ```mermaid
@@ -37,9 +36,11 @@ MESSAGE {
   boolean approved
 }
 POLICY {
+  int id
   boolean active
   int votes_for
   int votes_against
+  int replaces
 }
 CHANNEL }o--o{ USER : contains
 CHANNEL ||--o{ MESSAGE : contains
@@ -54,7 +55,7 @@ CHANNEL ||--|| MODBOT : contains
 ```
 
 ## Participants
-- **Channel**
+- **Channel** (also referred to as a Digital Space)
     - represents a shared digital space (such as a chat room) which is the context for `Messages` to be posted and read by `Users`. 
 - **Policy**
     -  defines a natural language criteria for allowed messages and resulting actions if that criteria is violated. In addition this object stores the votes for and against as voted on by users, as well as whether the policy is currently active, with the values themselves likely updated by the Moderation Bot (although this is an implementation detail that must be determined in context).
@@ -101,12 +102,34 @@ sequenceDiagram
   deactivate MODBOT
 ```
 
+### Updating a Policy
+
+The following shows the sequence of events surrounding a user requesting an active `Policy` (`Policy A`) be updated to `` Policy A` ``:
+```mermaid
+sequenceDiagram
+  actor USER1
+  actor USER2
+  actor USER3
+  USER1->>MODBOT: /update Policy A to Policy A`
+  activate MODBOT
+  MODBOT->>POLICY_A`: create with replacing field set to id of Policy A
+  MODBOT->>CHANNEL: Call for votes on Policy A` replacing Policy A
+  USER1->>MODBOT: /vote for Policy A`
+  USER2->>MODBOT: /vote against Policy A`
+  USER3->>MODBOT: /vote for Policy A`
+  MODBOT->>POLICY_A: deactivate
+  MODBOT->>POLICY_A`: activate
+  MODBOT->>CHANNEL: Announce Policy A` is active
+  MODBOT->>CHANNEL: Announce Policy A is deactivec
+  deactivate MODBOT
+```
+
 ## Consequences
-Some of the benefits and liabilities of the Visitor pattern are:
-1. *No reliance on a person (user) for policy enforcement.* Relying on a person (user) to enforce policy creates several problems that are avoided here. Specifically avoided are the influece of an individual `User`'s (the mod's) personal biases and self-interest both when determining policies and when choosing how to apply them.
-3. *Collective determination of accepted policies.* All users that are members of a channel have the ability to contribute to determining the acceptance of proposed policies as well as to propose policies themselves.
-4. *Limited to ability of ModBot to interpret and enforce policies.* The `ModBot` must understand what action is being called for within a policy and have the ability to execute that action. Without further guardrails, it is possible to write a policy that can not be acted upon.
-5. *Ambiguous policies lead to influence of algorithmic bias.* Because policies may be ambiguous, they can introduce an oppurtunity for algorithmic bias in the `ModBot` to determine the outcome of a policy decision. If `Users` in a `Channel` become aware of this happening, they are able to vote to remove the ambiguity from the policy, but doing so takes aligned community action.
+Some of the benefits and liabilities of the Evolutionary Collective Moderation pattern are:
+1. *No reliance on a person (user) for policy enforcement.* Relying on a person (user) to enforce policy creates several problems that are avoided here. Specifically avoided are the influence of an individual `User`'s (the mod's) personal biases and self-interest both when determining policies and when choosing how to apply them.
+2. *Collective determination of accepted policies.* All users that are members of a channel have the ability to contribute to determining the acceptance of proposed policies as well as to propose policies themselves.
+3. *Limited to ability of ModBot to interpret and enforce policies.* The `ModBot` must understand what action is being called for within a policy and have the ability to execute that action. Without further guardrails, it is possible to write a policy that can not be acted upon.
+4. *Ambiguous policies lead to influence of algorithmic bias.* Because policies may be ambiguous, they can introduce an oppurtunity for algorithmic bias in the `ModBot` to determine the outcome of a policy decision. If `Users` in a `Channel` become aware of this happening, they are able to vote to remove the ambiguity from the policy, but doing so takes aligned community action.
 
 ## Implementation
 *Once a design for a reference implementation is established, it will be described at a high-level here*
@@ -118,14 +141,13 @@ Some of the benefits and liabilities of the Visitor pattern are:
 To date, there are no known examples of this pattern being applied. The intent of this pattern document is to motivate it's implementation.  Hopefully this section can be updated over time as this pattern is explored further in practical applications.
 
 ## Related Patterns
-- AI First pass, Human Final Moderation (*need better name for this*)
-- *What would you call the pattern(s) associated with PolicyKit*
-- *What would you call the pattern used in current chat spaces with a human moderator?*
+- AI First pass, Human Final Moderation (*name?*)
+- Human moderators (*naming?*)
 ### Subpatterns:
 - AI Moderation
 - Democratic Policy Selection
 
-## *Variations* (this is not in the og template for design patterns, not sure if I want to leave this in, these might indicate other Related Patterns)
+## *Variations* (_this section likely belongs as part of the implementation section_)
 - control whether a message is added to the history based on policies
 - different types of voting systems (is there a way to make this pattern independent of voting systems? maybe using something like PolicyKit policies?)
 - ability to ask the bot directly if a comment is ok (pre-check)
