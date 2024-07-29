@@ -69,8 +69,12 @@ CHANNEL ||--|| MODBOT : contains
 
 ## Collaborations
 ### Policy Selection
+
+The following shows the sequence of events surround a proposal of a new policy, and its successfully being voted into active status:
 ```mermaid
 sequenceDiagram
+  accTitle: Using an Policy to Redact a Message and Remove a User in the Evolutionary Collective Moderation Design Pattern
+  accDescr: 
   actor USER1
   actor USER2
   actor USER3
@@ -91,6 +95,8 @@ sequenceDiagram
 Assuming an active `Policy` that forbids "offensive" `Messages` and requires that both the `Message` be redacted and the `User` removed from the `Channel`:
 ```mermaid
 sequenceDiagram
+  accTitle: Using an Policy to Redact a Message and Remove a User in the Evolutionary Collective Moderation Design Pattern
+  accDescr: This sequence diagram shows a user sending an offensive measure, followed by a moderation bot checking a policy to determine that the offensive message should be redacted and the user should be removed, followed by the moderation bot taking these actions.
   actor USER
   USER->>CHANNEL: This is an offensive message that violates policy
   CHANNEL->>MODBOT: receives message
@@ -107,6 +113,8 @@ sequenceDiagram
 The following shows the sequence of events surrounding a user requesting an active `Policy` (`Policy A`) be updated to `` Policy A` ``:
 ```mermaid
 sequenceDiagram
+  accTitle: Updating a Policy in the Evolutionary Collective Moderation design pattern
+  accDescr: This sequence diagram shows a user proposing to update a policy to a new version, followed by votes being collected by the moderation bot with the result being that the policy will be updated, followed by the moderation bot deactivating the old policy and activating the new policy before announcing in the channel.
   actor USER1
   actor USER2
   actor USER3
@@ -141,7 +149,7 @@ Some of the benefits and liabilities of the Evolutionary Collective Moderation p
 To date, there are no known examples of this pattern being applied. The intent of this pattern document is to motivate it's implementation.  Hopefully this section can be updated over time as this pattern is explored further in practical applications.
 
 ## Related Patterns
-- AI First pass, Human Final Moderation (*name?*)
+- AI First pass, Human Final Moderation (*naming?*)
 - Human moderators (*naming?*)
 ### Subpatterns:
 - AI Moderation
@@ -149,16 +157,9 @@ To date, there are no known examples of this pattern being applied. The intent o
 
 ## *Variations* (_this section likely belongs as part of the implementation section_)
 - control whether a message is added to the history based on policies
-- different types of voting systems (is there a way to make this pattern independent of voting systems? maybe using something like PolicyKit policies?)
+- different types of voting systems
 - ability to ask the bot directly if a comment is ok (pre-check)
 - ability to wait for a message to be flagged by the community before it is reviewed by the bot
-
-## *Todos*
-- [ ] make sure all diagrams have meaningful accesibility titles and descriptions
-
-## *Outstanding Questions*
-- Can this whole pattern be split apart into multiple useful patterns? Such as 1 for voting mechanism and 1 for enforcement? 
-- should `Policies` be created by a `user` with a status of whether or not they are approved?
-- Is there a need for more clarity around the "evolutionary" part of this pattern? (ex. How policies are updated over time)
+- `ModBot` sends a message explaining the moderation decision to the `Channel` and/or the offending `User`
 
  <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/bgrayburn/Evolutionary-Collective-Moderation-Design-Pattern">Evolutionary Collective Moderation Design Pattern</a> by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://brianrayburn.tech">Brian Rayburn</a> is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-SA 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1" alt=""></a></p> 
